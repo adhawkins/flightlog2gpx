@@ -29,6 +29,8 @@ namespace flightlog2gpx
         {
             // Create a simple tray menu with only one item.
             trayMenu = new ContextMenu();
+            trayMenu.MenuItems.Add("Settings", OnSettings);
+            trayMenu.MenuItems.Add("-");
             trayMenu.MenuItems.Add("Exit", OnExit);
 
             // Create a tray icon. In this example we use a
@@ -54,6 +56,21 @@ namespace flightlog2gpx
         private void OnExit(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void OnSettings(object sender, EventArgs e)
+        {
+            SettingsForm frmSettings = new SettingsForm();
+
+            frmSettings.FlightlogPath = Properties.Settings.Default.FlightlogPath;
+            frmSettings.GPXPath = Properties.Settings.Default.GPXPath;
+
+            if (DialogResult.OK == frmSettings.ShowDialog())
+            {
+                Properties.Settings.Default.FlightlogPath = frmSettings.FlightlogPath;
+                Properties.Settings.Default.GPXPath = frmSettings.GPXPath;
+                Properties.Settings.Default.Save();
+            }
         }
     }
 }
