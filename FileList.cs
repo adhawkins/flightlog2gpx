@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Diagnostics;
+using System.IO;
 
 namespace flightlog2gpx
 {
@@ -31,18 +32,17 @@ namespace flightlog2gpx
 
         public void ScanDirectory()
         {
-            int Count = 1;
-
-            while (m_Run)
+            foreach (string File in Directory.GetFiles(m_Directory))
             {
-                Debug.Print("Adding {0}", Count.ToString());
+                if (!m_Run)
+                    break;
 
                 lock (m_Queue)
                 {
-                    m_Queue.Enqueue(Count.ToString());
+                    Debug.Print("Storing {0}", File);
+                    m_Queue.Enqueue(File);
                 }
 
-                ++Count;
                 Thread.Sleep(1000);
             }
         }
