@@ -69,6 +69,7 @@ namespace flightlog2gpx
         {
             m_FileList.Dispose();
             m_Processor.Dispose();
+            trayIcon.Dispose();
 
             Application.Exit();
         }
