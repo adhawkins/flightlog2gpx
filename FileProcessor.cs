@@ -4,29 +4,32 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Diagnostics;
+using SkyDemonUtils;
 
 namespace flightlog2gpx
 {
     class FileProcessor: IDisposable
     {
-        string m_Directory;
+        string m_SourceDir;
+        string m_DestDir;
         Thread m_Thread;
-        bool m_Run=false;
+        bool m_Run = false;
         FileList m_FileList;
 
-        public FileProcessor(string Directory, FileList TheFileList)
+        public FileProcessor(string SourceDir, string DestDir, FileList TheFileList)
         {
-            m_Directory=Directory;
-            m_FileList=TheFileList;
+            m_SourceDir = SourceDir;
+            m_DestDir = DestDir;
+            m_FileList = TheFileList;
 
-            m_Run=true;
-            m_Thread=new Thread(new ThreadStart(ProcessFiles));
+            m_Run = true;
+            m_Thread = new Thread(new ThreadStart(ProcessFiles));
             m_Thread.Start();
         }
 
         public void Dispose()
         {
-            m_Run=false;
+            m_Run = false;
             m_Thread.Join();
         }
 
@@ -38,15 +41,29 @@ namespace flightlog2gpx
                 try
                 {
                     string File = m_FileList.GetFile();
-                    Debug.Print("Processing {0}", File);
+                    Debug.Print("Processing {0} into {1}", 
+                        m_SourceDir+"\\"+File,
+                        m_DestDir+"\\"+File+".gpx");
+
+                    SkyDemonFlightLog FlightLog = new SkyDemonFlightLog(m_SourceDir+"\\"+File);
+
+                    GPXFile GPXFile = new GPXFile(m_DestDir + "\\" + File + ".gpx");
+                    GPXFile.Description = "Test GPX file";
+
+                    foreach (SkyDemonFlightLog.FlightLogDataPoint DataPoint in FlightLog.DataPoints)
+                    {
+                        GPXFile.AddPoint(DataPoint.m_Latitude, DataPoint.m_Longitude, DataPoint.m_Elevation, DataPoint.m_Speed, DataPoint.m_Time);
+                    }
+
+                    GPXFile.WriteFile();
                 }
 
-                catch (InvalidOperationException e)
+                catch (InvalidOperationException)
                 {
                     Debug.Print("No files for processing");
                 }
 
-                Thread.Sleep(750);
+                Thread.Sleep(100);
             }
         }
     }

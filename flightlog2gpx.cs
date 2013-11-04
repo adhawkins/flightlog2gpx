@@ -53,7 +53,9 @@ namespace flightlog2gpx
             if (Properties.Settings.Default.FlightlogPath.Length != 0 && Properties.Settings.Default.GPXPath.Length != 0)
             {
                 m_FileList = new FileList(Properties.Settings.Default.FlightlogPath);
-                m_Processor = new FileProcessor(Properties.Settings.Default.GPXPath, m_FileList);
+                m_Processor = new FileProcessor(Properties.Settings.Default.FlightlogPath,
+                    Properties.Settings.Default.GPXPath, 
+                    m_FileList);
             }
         }
 
