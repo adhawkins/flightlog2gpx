@@ -39,11 +39,17 @@ namespace flightlog2gpx
 
                 lock (m_Queue)
                 {
-                    Debug.Print("Storing {0}", File);
-                    m_Queue.Enqueue(File);
-                }
+                    int index = File.IndexOf(m_Directory);
+                    string StripFile = (index < 0)
+                        ? File
+                        : File.Remove(index, m_Directory.Length);
 
-                Thread.Sleep(1000);
+                    while (StripFile[0] == '\\')
+                        StripFile=StripFile.Remove(0, 1);
+                    
+                    Debug.Print("Storing {0}", StripFile);
+                    m_Queue.Enqueue(StripFile);
+                }
             }
         }
 
