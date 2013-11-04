@@ -19,12 +19,6 @@
             }
             base.Dispose(disposing);
         }
-
-        private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox txtStatus;
-        private System.Windows.Forms.ProgressBar progressBar1;
-        private System.Windows.Forms.Label label2;
     }
 }
 

@@ -46,6 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FileProcessor.cs" />
+    <Compile Include="FileList.cs" />
     <Compile Include="flightlog2gpx.cs">
       <SubType>Form</SubType>
     </Compile>
