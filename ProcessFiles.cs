@@ -91,10 +91,7 @@ namespace flightlog2gpx
                     GPXFile GPXFile = new GPXFile(DestFile);
                     GPXFile.Description = "Test GPX file";
 
-                    foreach (SkyDemonFlightLog.FlightLogDataPoint DataPoint in FlightLog.DataPoints)
-                    {
-                        GPXFile.AddPoint(DataPoint.m_Latitude, DataPoint.m_Longitude, DataPoint.m_Elevation, DataPoint.m_Speed, DataPoint.m_Time);
-                    }
+                    GPXFile.AddPoints(FlightLog.DataPoints);
 
                     GPXFile.WriteFile();
                 }
