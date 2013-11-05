@@ -42,8 +42,8 @@ namespace flightlog2gpx
             m_Watcher.EnableRaisingEvents = false;
 
             m_Run = false;
-            m_Thread.Join();
             m_Event.Set();
+            m_Thread.Join();
         }
 
         void m_Watcher_Changed(object sender, FileSystemEventArgs e)
