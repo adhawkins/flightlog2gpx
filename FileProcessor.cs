@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Diagnostics;
 using SkyDemonUtils;
+using System.IO;
 
 namespace flightlog2gpx
 {
@@ -41,21 +42,30 @@ namespace flightlog2gpx
                 try
                 {
                     string File = m_FileList.GetFile();
+                    string SourceFile = m_SourceDir + "\\" + File;
+                    string DestFile = m_DestDir + "\\" + File + ".gpx";
+
                     Debug.Print("Processing {0} into {1}", 
-                        m_SourceDir+"\\"+File,
-                        m_DestDir+"\\"+File+".gpx");
+                        SourceFile,
+                        DestFile);
 
-                    SkyDemonFlightLog FlightLog = new SkyDemonFlightLog(m_SourceDir+"\\"+File);
+                    FileInfo Source = new FileInfo(SourceFile);
+                    FileInfo Dest = new FileInfo(DestFile);
 
-                    GPXFile GPXFile = new GPXFile(m_DestDir + "\\" + File + ".gpx");
-                    GPXFile.Description = "Test GPX file";
-
-                    foreach (SkyDemonFlightLog.FlightLogDataPoint DataPoint in FlightLog.DataPoints)
+                    if (Source.Exists && (!Dest.Exists || Source.LastWriteTime > Dest.LastWriteTime))
                     {
-                        GPXFile.AddPoint(DataPoint.m_Latitude, DataPoint.m_Longitude, DataPoint.m_Elevation, DataPoint.m_Speed, DataPoint.m_Time);
-                    }
+                        SkyDemonFlightLog FlightLog = new SkyDemonFlightLog(SourceFile);
 
-                    GPXFile.WriteFile();
+                        GPXFile GPXFile = new GPXFile(DestFile);
+                        GPXFile.Description = "Test GPX file";
+
+                        foreach (SkyDemonFlightLog.FlightLogDataPoint DataPoint in FlightLog.DataPoints)
+                        {
+                            GPXFile.AddPoint(DataPoint.m_Latitude, DataPoint.m_Longitude, DataPoint.m_Elevation, DataPoint.m_Speed, DataPoint.m_Time);
+                        }
+
+                        GPXFile.WriteFile();
+                    }
                 }
 
                 catch (InvalidOperationException)
